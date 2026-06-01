@@ -2,6 +2,8 @@
 const nextConfig = {
   devIndicators: false,
   output: "export",
+  basePath: "/interior",
+  assetPrefix: "/interior",
   images: {
     unoptimized: true,
   },

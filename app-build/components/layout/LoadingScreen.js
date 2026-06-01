@@ -97,7 +97,7 @@ export default function LoadingScreen() {
       {/* Background Fullscreen Video */}
       <video
         ref={videoRef}
-        src="/loading.mp4"
+        src="/interior/loading.mp4"
         autoPlay
         muted
         playsInline
