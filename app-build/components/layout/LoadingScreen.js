@@ -93,7 +93,7 @@ export default function LoadingScreen() {
           {/* Background Fullscreen Video */}
           <video
             ref={videoRef}
-            src="/loading.mp4"
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/loading.mp4`}
             autoPlay
             muted
             playsInline
