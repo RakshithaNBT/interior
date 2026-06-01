@@ -12,17 +12,20 @@ function GoldParticles() {
   const [particles, setParticles] = useState([]);
 
   useEffect(() => {
-    setParticles(
-      Array.from({ length: 25 }, (_, i) => ({
-        id: i,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        size: Math.random() * 4 + 2,
-        delay: Math.random() * 8,
-        duration: Math.random() * 10 + 12,
-        opacity: Math.random() * 0.4 + 0.1,
-      }))
-    );
+    const timer = setTimeout(() => {
+      setParticles(
+        Array.from({ length: 25 }, (_, i) => ({
+          id: i,
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          size: Math.random() * 4 + 2,
+          delay: Math.random() * 8,
+          duration: Math.random() * 10 + 12,
+          opacity: Math.random() * 0.4 + 0.1,
+        }))
+      );
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   if (particles.length === 0) return null;

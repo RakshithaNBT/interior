@@ -1,4 +1,4 @@
-"use c655ent";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -10,7 +10,10 @@ export default function ExpertiseGallery({ data }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   if (!mounted || !data) return null;

@@ -241,20 +241,23 @@ function ConfettiDots() {
   const [dots, setDots] = useState([]);
 
   useEffect(() => {
-    setDots(
-      Array.from({ length: 30 }, (_, i) => ({
-        id: i,
-        width: Math.random() * 8 + 4,
-        height: Math.random() * 8 + 4,
-        color: colors[i % colors.length],
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        yDest: -(Math.random() * 120 + 60),
-        xDest: (Math.random() - 0.5) * 80,
-        delay: Math.random() * 0.6,
-      }))
-    );
-  }, []);
+    const timer = setTimeout(() => {
+      setDots(
+        Array.from({ length: 30 }, (_, i) => ({
+          id: i,
+          width: Math.random() * 8 + 4,
+          height: Math.random() * 8 + 4,
+          color: colors[i % colors.length],
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          yDest: -(Math.random() * 120 + 60),
+          xDest: (Math.random() - 0.5) * 80,
+          delay: Math.random() * 0.6,
+        }))
+      );
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [colors]);
 
   if (dots.length === 0) return null;
 

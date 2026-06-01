@@ -369,6 +369,20 @@ body::before {
 }
 
 /* ===== Swiper Overrides ===== */
+.swiper {
+  padding-bottom: 60px !important;
+}
+.swiper-wrapper {
+  height: auto !important;
+}
+.swiper-slide {
+  height: auto !important;
+  display: flex !important;
+  align-items: stretch !important;
+}
+.swiper-pagination {
+  bottom: 0px !important;
+}
 .swiper-pagination-bullet {
   background: var(--text-tertiary) !important;
   opacity: 1 !important;
@@ -425,4 +439,132 @@ video {
 }
 .booking-card textarea {
   padding: 1.25rem !important;
+}
+
+/* ===== Premium Portfolio Filter & Tabs ===== */
+.portfolio-filter-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 2.5rem auto 1.5rem auto;
+  position: relative;
+  z-index: 30;
+}
+
+.portfolio-filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(245, 240, 235, 0.85); /* Light premium cream */
+  border: 1.5px solid rgba(26, 26, 26, 0.1);
+  border-radius: 9999px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.6),
+    0 12px 30px rgba(0, 0, 0, 0.05),
+    0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  width: fit-content;
+  max-width: 95%;
+  flex-wrap: wrap; /* standard wrap for wrapping nicely on small screens */
+}
+
+[data-theme="dark"] .portfolio-filter-container {
+  background: rgba(21, 21, 21, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.05),
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-filter-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 10px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8A8478; /* Secondary neutral text */
+  border: none;
+  background: transparent;
+  border-radius: 9999px;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+[data-theme="dark"] .portfolio-filter-btn {
+  color: #9B9590;
+}
+
+.portfolio-filter-btn:hover {
+  color: #1A1A1A;
+  transform: scale(1.04) translateY(-1px);
+}
+
+[data-theme="dark"] .portfolio-filter-btn:hover {
+  color: #F0EDE8;
+}
+
+.portfolio-filter-btn:active {
+  transform: scale(0.96) translateY(1px);
+}
+
+/* Selected Active button style */
+.portfolio-filter-btn.active {
+  color: #1A1A1A !important;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .portfolio-filter-btn.active {
+  color: #1A1A1A !important;
+  text-shadow: none;
+}
+
+/* Beautiful custom active background slide */
+.portfolio-active-indicator {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #C9A96E 0%, #E8D5A3 50%, #B8944E 100%);
+  box-shadow: 
+    0 4px 14px rgba(201, 169, 110, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  z-index: -1;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+[data-theme="dark"] .portfolio-active-indicator {
+  background: linear-gradient(135deg, #D4AF72 0%, #E0C08A 50%, #C9A96E 100%);
+  box-shadow: 
+    0 4px 20px rgba(212, 175, 114, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 640px) {
+  .portfolio-filter-container {
+    padding: 6px;
+    gap: 6px;
+    border-radius: 20px;
+    justify-content: center;
+  }
+  
+  .portfolio-filter-btn {
+    padding: 8px 14px;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
 }

@@ -168,8 +168,8 @@ function TiltRoomCard({ room }) {
 
       {/* content */}
       <div
-        className="absolute bottom-0 inset-x-0 p-6 md:p-8"
-        style={{ transform: "translateZ(30px)" }}
+        className="absolute bottom-0 inset-x-0"
+        style={{ transform: "translateZ(30px)", padding: "28px" }}
       >
         <h3 className="text-white text-xl md:text-2xl font-[family-name:var(--font-heading)] font-bold mb-1">
           {room.name}
@@ -205,7 +205,10 @@ function MobileRoomCard({ room }) {
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/5" />
 
-      <div className="absolute bottom-0 inset-x-0 p-5">
+      <div 
+        className="absolute bottom-0 inset-x-0"
+        style={{ padding: "20px" }}
+      >
         <h3 className="text-white text-lg font-[family-name:var(--font-heading)] font-bold mb-1">
           {room.name}
         </h3>

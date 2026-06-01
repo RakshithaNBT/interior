@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import gsap from "gsap";
@@ -9,6 +9,7 @@ import { portfolioItems } from "@/lib/constants";
 
 const categories = [
   "All",
+
   "Living Room",
   "Kitchen",
   "Bedroom",
@@ -26,8 +27,6 @@ export default function PortfolioSection() {
   const headingRef = useRef(null);
   const trackRef = useRef(null);
   const pinWrapRef = useRef(null);
-  const tabsRef = useRef(null);
-  const indicatorRef = useRef(null);
   const headingInView = useInView(headingRef, { once: true, amount: 0.3 });
 
   /* ── responsive check ── */
@@ -43,24 +42,6 @@ export default function PortfolioSection() {
     activeCategory === "All"
       ? portfolioItems
       : portfolioItems.filter((p) => p.category === activeCategory);
-
-  /* ── tab indicator slide ── */
-  const moveIndicator = useCallback(() => {
-    if (!tabsRef.current || !indicatorRef.current) return;
-    const activeBtn = tabsRef.current.querySelector(
-      `[data-cat="${activeCategory}"]`
-    );
-    if (!activeBtn) return;
-    const { offsetLeft, offsetWidth } = activeBtn;
-    indicatorRef.current.style.left = `${offsetLeft}px`;
-    indicatorRef.current.style.width = `${offsetWidth}px`;
-  }, [activeCategory]);
-
-  useEffect(() => {
-    moveIndicator();
-    window.addEventListener("resize", moveIndicator);
-    return () => window.removeEventListener("resize", moveIndicator);
-  }, [moveIndicator]);
 
   /* ── GSAP horizontal scroll (desktop only) ── */
   useEffect(() => {
@@ -155,36 +136,47 @@ export default function PortfolioSection() {
             brought to life with meticulous craftsmanship and design excellence.
           </motion.p>
 
-          {/* ── Filter Tabs ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={headingInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.45 }}
-            ref={tabsRef}
-            className="relative inline-flex flex-wrap justify-center gap-1 md:gap-2 p-1.5 rounded-full bg-[var(--surface)] border border-[var(--border)]"
-          >
-            {/* sliding indicator */}
-            <span
-              ref={indicatorRef}
-              className="absolute top-1.5 h-[calc(100%-12px)] rounded-full bg-[var(--gold)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
-              style={{ zIndex: 0 }}
-            />
-
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                data-cat={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`relative z-10 px-4 md:px-6 py-2 text-xs md:text-sm font-medium rounded-full transition-colors duration-300 whitespace-nowrap ${
-                  activeCategory === cat
-                    ? "text-charcoal"
-                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </motion.div>
+          {/* ── Filter Tabs (Luxury Toggle Switch) ── */}
+          <div className="w-full flex justify-center items-center my-12 z-20 relative px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={headingInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.45 }}
+              className="flex items-center justify-center rounded-full bg-[#F5F0EB]/95 dark:bg-[#151515]/95 border border-[#1A1A1A]/10 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02),0_15px_45px_rgba(0,0,0,0.06)] mx-auto w-fit z-10 backdrop-blur-xl flex-wrap"
+              style={{
+                padding: isMobile ? "8px 12px" : "12px 18px",
+                gap: isMobile ? "8px" : "14px",
+              }}
+            >
+              {categories.map((cat) => {
+                const isActive = activeCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    style={{
+                      padding: isMobile ? "10px 18px" : "14px 32px",
+                      transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
+                    }}
+                    className={`relative z-10 text-[10px] sm:text-xs font-semibold tracking-[0.12em] uppercase rounded-full whitespace-nowrap cursor-pointer select-none hover:scale-[1.04] active:scale-[0.96] ${
+                      isActive
+                        ? "text-[#1A1A1A] font-bold"
+                        : "text-[#8A8478] hover:text-[#1A1A1A] dark:text-[#9B9590] dark:hover:text-[#F0EDE8]"
+                    }`}
+                  >
+                    {cat}
+                    {isActive && (
+                      <motion.span
+                        layoutId="portfolioActiveTab"
+                        className="absolute inset-0 rounded-full bg-gradient-to-r from-[#C9A96E] to-[#B8944E] dark:from-[#D4AF72] dark:to-[#E0C08A] shadow-[0_6px_20px_rgba(201,169,110,0.4)] -z-10"
+                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </motion.div>
+          </div>
         </div>
       </div>
 
@@ -232,6 +224,7 @@ export default function PortfolioSection() {
         {selectedItem && (
           <ProjectModal
             item={selectedItem}
+            isMobile={isMobile}
             onClose={() => setSelectedItem(null)}
           />
         )}
@@ -294,7 +287,10 @@ function DesktopCard({
 
       {/* glass info bar at bottom */}
       <div className="absolute bottom-0 inset-x-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]">
-        <div className="backdrop-blur-xl bg-white/10 border-t border-white/20 p-6">
+        <div 
+          className="backdrop-blur-xl bg-white/10 border-t border-white/20"
+          style={{ padding: '24px' }}
+        >
           <span className="text-[var(--gold)] text-xs font-semibold tracking-[0.2em] uppercase">
             {item.category}
           </span>
@@ -335,7 +331,10 @@ function MobileCard({
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-      <div className="absolute bottom-0 inset-x-0 p-3">
+      <div 
+        className="absolute bottom-0 inset-x-0"
+        style={{ padding: '16px' }}
+      >
         <span className="text-[var(--gold)] text-[10px] font-semibold tracking-[0.15em] uppercase">
           {item.category}
         </span>
@@ -351,6 +350,7 @@ function MobileCard({
 /* ═══════════════════════════ ProjectModal ═══════════════════════ */
 function ProjectModal({
   item,
+  isMobile,
   onClose,
 }) {
   return (
@@ -410,7 +410,13 @@ function ProjectModal({
         </div>
 
         {/* info */}
-        <div className="p-6 md:p-10 -mt-16 relative z-10">
+        <div 
+          className="relative z-10"
+          style={{
+            padding: isMobile ? "24px 20px" : "48px 40px",
+            marginTop: "-64px"
+          }}
+        >
           <span className="text-[var(--gold)] text-xs font-semibold tracking-[0.2em] uppercase">
             {item.category}
           </span>
@@ -422,7 +428,10 @@ function ProjectModal({
             {item.description}
           </p>
 
-          <div className="flex flex-wrap gap-6 text-sm">
+          <div 
+            className="flex flex-wrap text-sm"
+            style={{ gap: "24px" }}
+          >
             <div>
               <span className="text-[var(--text-tertiary)] block mb-1">
                 Area

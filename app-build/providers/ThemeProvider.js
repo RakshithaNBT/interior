@@ -12,12 +12,15 @@ export function ThemeProvider({ children }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const stored = localStorage.getItem("eleva-theme");
-    if (stored) {
-      setTheme(stored);
-      document.documentElement.setAttribute("data-theme", stored);
-    }
+    const timer = setTimeout(() => {
+      setMounted(true);
+      const stored = localStorage.getItem("eleva-theme");
+      if (stored) {
+        setTheme(stored);
+        document.documentElement.setAttribute("data-theme", stored);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const toggleTheme = () => {
