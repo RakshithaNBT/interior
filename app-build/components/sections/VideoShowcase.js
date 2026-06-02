@@ -12,35 +12,35 @@ const scenes = [
     title: "The Living Salon",
     focus: "Floating Ceilings & Integrated Cove Lights",
     description: "Plush modular layout detailed with integrated warm cove lighting, luxury partition work, and elegant floating ceiling architecture.",
-    image: "/images/portfolio-living.png",
+    image: "/interior/images/portfolio-living.png",
   },
   {
     id: 2,
     title: "Bespoke Culinary Haven",
     focus: "Fluted Wood Modular Kitchen",
     description: "Architectural fluted wood cabinetry, custom double-layered white quartz island countertops, and seamless flush built-in appliances.",
-    image: "/images/portfolio-kitchen.png",
+    image: "/interior/images/portfolio-kitchen.png",
   },
   {
     id: 3,
     title: "The Couture Bedroom",
     focus: "Suede Architectural Feature Wall",
     description: "Hand-finished wall suede panelling detailed with dual gold brass sconces, ambient lighting tracks, and matching floating joinery.",
-    image: "/images/portfolio-bedroom.png",
+    image: "/interior/images/portfolio-bedroom.png",
   },
   {
     id: 4,
     title: "Sanctuary En-Suite",
     focus: "Bookmatched Marble Bathroom",
     description: "Exquisite veined bookmatched marble wall slab cladding, double backlit floating mirrors, and premium knurled matte gold fixtures.",
-    image: "/images/portfolio-bathroom.png",
+    image: "/interior/images/portfolio-bathroom.png",
   },
   {
     id: 5,
     title: "The Dining Lounge",
     focus: "Venetian Plaster Ceilings & Feature Wall",
     description: "Premium Venetian plaster textures, a custom metal geometric visual screen, and a cascading warm crystal chandelier design.",
-    image: "/images/about.png",
+    image: "/interior/images/about.png",
   },
 ];
 
@@ -431,7 +431,7 @@ export default function VideoShowcase() {
                         >
                           {/* Poster Image */}
                           <Image
-                            src="/images/hero-bg.png"
+                            src="/interior/images/hero-bg.png"
                             alt="Video tour preview"
                             fill
                             className="object-cover transition-transform duration-700 group-hover:scale-105"

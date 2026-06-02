@@ -173,7 +173,7 @@ export default function HeroSection() {
       {/* ============ BACKGROUND IMAGE ============ */}
       <div ref={bgRef} className="absolute inset-0 z-0 will-change-transform">
         <Image
-          src="/images/hero-bg.png"
+          src="/interior/images/hero-bg.png"
           alt="Luxury interior"
           fill
           priority

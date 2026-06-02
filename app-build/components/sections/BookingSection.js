@@ -717,7 +717,7 @@ export default function BookingSection() {
             {/* Image Container with ambient glow */}
             <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-[var(--shadow-xl)] border border-[var(--border)] z-10">
               <Image
-                src="/images/portfolio-living.png"
+                src="/interior/images/portfolio-living.png"
                 alt="Luxury living room"
                 fill
                 className="object-cover transition-transform duration-1000 hover:scale-105"

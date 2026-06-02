@@ -217,7 +217,7 @@ export default function BeforeAfterSection() {
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute top-0 bottom-0 right-0 w-[200%] h-full">
                 <Image
-                  src="/images/before-after-combined.png"
+                  src="/interior/images/before-after-combined.png"
                   alt="After transformation"
                   fill
                   className="object-cover"
@@ -236,7 +236,7 @@ export default function BeforeAfterSection() {
             >
               <div className="absolute top-0 bottom-0 left-0 w-[200%] h-full">
                 <Image
-                  src="/images/before-after-combined.png"
+                  src="/interior/images/before-after-combined.png"
                   alt="Before transformation"
                   fill
                   className="object-cover"

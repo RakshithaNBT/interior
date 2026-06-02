@@ -65,7 +65,7 @@ export default function AboutSection() {
           style={{ clipPath: "inset(0 100% 0 0)" }}
         >
           <Image
-            src="/images/about.png"
+            src="/interior/images/about.png"
             alt="Interior design studio work"
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
