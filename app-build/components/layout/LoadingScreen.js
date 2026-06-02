@@ -122,7 +122,7 @@ export default function LoadingScreen() {
       {/* Skip Intro Button */}
       <button
         onClick={handleSkip}
-        className="absolute bottom-6 right-10 md:bottom-[50px] md:right-[150px] z-50 flex items-center rounded-full border border-white/20 bg-black/30 p-4 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.6)] transition-all duration-500 hover:bg-black/60 hover:border-[var(--gold)] hover:shadow-[0_0_30px_rgba(201,169,110,0.4)] group cursor-pointer"
+        className="absolute bottom-6 right-10 md:bottom-[28px] md:right-[96px] z-50 flex items-center rounded-full border border-white/20 bg-black/30 p-4 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.6)] transition-all duration-500 hover:bg-black/60 hover:border-[var(--gold)] hover:shadow-[0_0_30px_rgba(201,169,110,0.4)] group cursor-pointer"
       >
         <div className="relative flex h-16 w-16 items-center justify-center text-white transition-transform duration-500 group-hover:scale-110 group-hover:text-[var(--gold)]">
           <span className="absolute inset-0 rounded-full animate-ping bg-white/20 group-hover:animate-none opacity-50" />
