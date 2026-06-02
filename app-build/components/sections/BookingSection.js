@@ -680,7 +680,7 @@ export default function BookingSection() {
                   </div>
 
                   {/* navigation buttons */}
-                  <div className="mt-8 flex items-center justify-between">
+                  <div className="mt-12 flex items-center justify-between">
                     {step > 1 ? (
                       <button
                         type="button"
