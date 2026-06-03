@@ -3,7 +3,6 @@ import AboutSection from "@/components/sections/AboutSection";
 import BrandMarquee from "@/components/sections/BrandMarquee";
 import ServicesSection from "@/components/sections/ServicesSection";
 import RoomCategories from "@/components/sections/RoomCategories";
-import PortfolioSection from "@/components/sections/PortfolioSection";
 import BeforeAfterSection from "@/components/sections/BeforeAfterSection";
 import StatsCounter from "@/components/sections/StatsCounter";
 import VideoShowcase from "@/components/sections/VideoShowcase";
@@ -20,7 +19,6 @@ export default function Home() {
       <ServicesSection />
       <RoomCategories />
       <StatsCounter />
-      <PortfolioSection />
       <BeforeAfterSection />
       <VideoShowcase />
       <TestimonialSection />

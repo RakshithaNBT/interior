@@ -3,8 +3,18 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { services } from "@/lib/constants";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { services, portfolioItems } from "@/lib/constants";
+import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+
+const serviceToCategory = {
+  "Living Room Design": "Living Room",
+  "Modular Kitchen": "Kitchen",
+  "Bedroom Interiors": "Bedroom",
+  "Bathroom Design": "Bathroom",
+  "Home Office": "Office",
+  "Complete Home": "All"
+};
 
 /* ───────── Inline SVG Icons ───────── */
 const iconPaths = {
@@ -276,7 +286,7 @@ const iconPaths = {
 };
 
 /* ───────── Card Component ───────── */
-function FlipCard({ title, description, icon, index }) {
+function FlipCard({ title, description, icon, index, onExplore }) {
   const cardRef = useRef(null);
   const [isTouched, setIsTouched] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -370,12 +380,18 @@ function FlipCard({ title, description, icon, index }) {
           </div>
           
           {/* Bottom link */}
-          <span className="mt-4 inline-flex items-center text-[var(--gold)] text-xs font-semibold tracking-widest uppercase gap-1">
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              onExplore();
+            }}
+            className="mt-4 inline-flex items-center text-[var(--gold)] text-xs font-semibold tracking-widest uppercase gap-1 hover:gap-2 transition-all cursor-pointer relative z-20"
+          >
             Explore Details
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M7 17L17 7M17 7H7M17 7V17" />
             </svg>
-          </span>
+          </button>
         </div>
 
         {/* ── BACK ── */}
@@ -441,6 +457,18 @@ function FlipCard({ title, description, icon, index }) {
 export default function ServicesSection() {
   const sectionRef = useRef(null);
   const cardsRef = useRef(null);
+  const [selectedService, setSelectedService] = useState(null);
+
+  useEffect(() => {
+    if (selectedService) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedService]);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -554,11 +582,89 @@ export default function ServicesSection() {
                 description={service.description}
                 icon={service.icon}
                 index={i}
+                onExplore={() => setSelectedService(service.title)}
               />
             </div>
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {selectedService && (
+          <ServiceModal 
+            serviceTitle={selectedService} 
+            onClose={() => setSelectedService(null)} 
+          />
+        )}
+      </AnimatePresence>
     </section>
+  );
+}
+
+/* ───────── Modal Component ───────── */
+function ServiceModal({ serviceTitle, onClose }) {
+  const category = serviceToCategory[serviceTitle] || "All";
+  const items = category === "All" ? portfolioItems : portfolioItems.filter(p => p.category === category);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative z-10 w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-2xl p-6 md:p-10"
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+        
+        <h2 className="text-2xl md:text-4xl font-[family-name:var(--font-heading)] font-bold text-[var(--text-primary)] mb-2 text-center">
+          {serviceTitle} <span className="gold-gradient-text">Portfolio</span>
+        </h2>
+        <div className="gold-divider mx-auto mb-8" />
+        
+        {items.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {items.map((item) => (
+              <div key={item.id} className="relative aspect-[4/5] rounded-xl overflow-hidden group">
+                <Image 
+                  src={item.image} 
+                  alt={item.title} 
+                  fill 
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                <div className="absolute bottom-0 inset-x-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 p-6 pointer-events-none">
+                  <span className="text-[var(--gold)] text-xs font-semibold tracking-widest uppercase mb-1 block">
+                    {item.category}
+                  </span>
+                  <h3 className="text-white text-xl font-bold font-[family-name:var(--font-heading)] mb-1">
+                    {item.title}
+                  </h3>
+                  <p className="text-white/70 text-sm">{item.location}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-[var(--text-secondary)] py-12">No projects found for this category yet.</p>
+        )}
+      </motion.div>
+    </motion.div>
   );
 }
