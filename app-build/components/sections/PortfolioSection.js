@@ -3,13 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { portfolioItems } from "@/lib/constants";
 
 const categories = [
   "All",
-
   "Living Room",
   "Kitchen",
   "Bedroom",
@@ -21,65 +18,16 @@ const categories = [
 export default function PortfolioSection() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedItem, setSelectedItem] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
 
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
-  const trackRef = useRef(null);
-  const pinWrapRef = useRef(null);
   const headingInView = useInView(headingRef, { once: true, amount: 0.3 });
-
-  /* ── responsive check ── */
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   /* ── filtered items ── */
   const filtered =
     activeCategory === "All"
       ? portfolioItems
       : portfolioItems.filter((p) => p.category === activeCategory);
-
-  /* ── GSAP horizontal scroll (desktop only) ── */
-  useEffect(() => {
-    if (isMobile) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Small delay to let DOM settle after filter change
-    const timer = setTimeout(() => {
-      if (!trackRef.current || !pinWrapRef.current || !sectionRef.current)
-        return;
-
-      const track = trackRef.current;
-      const scrollAmount = track.scrollWidth - window.innerWidth;
-
-      if (scrollAmount <= 0) return;
-
-      const ctx = gsap.context(() => {
-        gsap.to(track, {
-          x: -scrollAmount,
-          ease: "none",
-          scrollTrigger: {
-            trigger: pinWrapRef.current,
-            pin: true,
-            start: "top top",
-            end: () => `+=${scrollAmount}`,
-            scrub: 1,
-            invalidateOnRefresh: true,
-            anticipatePin: 1,
-          },
-        });
-      }, sectionRef);
-
-      return () => ctx.revert();
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [isMobile, activeCategory]);
 
   /* ── lock body scroll when modal open ── */
   useEffect(() => {
@@ -142,11 +90,7 @@ export default function PortfolioSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={headingInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.45 }}
-              className="flex items-center justify-center rounded-full bg-[#F5F0EB]/95 dark:bg-[#151515]/95 border border-[#1A1A1A]/10 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02),0_15px_45px_rgba(0,0,0,0.06)] mx-auto w-fit z-10 backdrop-blur-xl flex-wrap"
-              style={{
-                padding: isMobile ? "8px 12px" : "12px 18px",
-                gap: isMobile ? "8px" : "14px",
-              }}
+              className="flex items-center justify-center rounded-full bg-[#F5F0EB]/95 dark:bg-[#151515]/95 border border-[#1A1A1A]/10 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02),0_15px_45px_rgba(0,0,0,0.06)] mx-auto w-fit z-10 backdrop-blur-xl flex-wrap p-2 md:p-3 gap-2 md:gap-3"
             >
               {categories.map((cat) => {
                 const isActive = activeCategory === cat;
@@ -154,11 +98,7 @@ export default function PortfolioSection() {
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
-                    style={{
-                      padding: isMobile ? "10px 18px" : "14px 32px",
-                      transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
-                    }}
-                    className={`relative z-10 text-[10px] sm:text-xs font-semibold tracking-[0.12em] uppercase rounded-full whitespace-nowrap cursor-pointer select-none hover:scale-[1.04] active:scale-[0.96] ${
+                    className={`relative z-10 text-[10px] sm:text-xs font-semibold tracking-[0.12em] uppercase rounded-full whitespace-nowrap cursor-pointer select-none hover:scale-[1.04] active:scale-[0.96] transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] py-2.5 px-4 md:py-3.5 md:px-8 ${
                       isActive
                         ? "text-[#1A1A1A] font-bold"
                         : "text-[#8A8478] hover:text-[#1A1A1A] dark:text-[#9B9590] dark:hover:text-[#F0EDE8]"
@@ -181,33 +121,12 @@ export default function PortfolioSection() {
       </div>
 
       {/* ── Gallery ── */}
-      {isMobile ? (
-        /* ── MOBILE: vertical grid ── */
-        <div className="section-padding pt-0">
-          <div className="container-luxury">
-            <motion.div layout className="grid grid-cols-2 gap-3 sm:gap-4">
-              <AnimatePresence mode="popLayout">
-                {filtered.map((item) => (
-                  <MobileCard
-                    key={item.id}
-                    item={item}
-                    onSelect={setSelectedItem}
-                  />
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          </div>
-        </div>
-      ) : (
-        /* ── DESKTOP: horizontal scroll ── */
-        <div ref={pinWrapRef} className="relative">
-          <div
-            ref={trackRef}
-            className="flex items-stretch gap-8 pl-[5vw] pr-[10vw] py-12 will-change-transform"
-          >
+      <div className="section-padding pt-0">
+        <div className="container-luxury">
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             <AnimatePresence mode="popLayout">
               {filtered.map((item, i) => (
-                <DesktopCard
+                <ProjectCard
                   key={item.id}
                   item={item}
                   index={i}
@@ -215,16 +134,15 @@ export default function PortfolioSection() {
                 />
               ))}
             </AnimatePresence>
-          </div>
+          </motion.div>
         </div>
-      )}
+      </div>
 
       {/* ── Detail Modal ── */}
       <AnimatePresence>
         {selectedItem && (
           <ProjectModal
             item={selectedItem}
-            isMobile={isMobile}
             onClose={() => setSelectedItem(null)}
           />
         )}
@@ -233,8 +151,8 @@ export default function PortfolioSection() {
   );
 }
 
-/* ═══════════════════════════ DesktopCard ═══════════════════════ */
-function DesktopCard({
+/* ═══════════════════════════ ProjectCard ═══════════════════════ */
+function ProjectCard({
   item,
   index,
   onSelect,
@@ -249,7 +167,7 @@ function DesktopCard({
       ([entry]) => {
         if (entry.isIntersecting) setRevealed(true);
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
     observer.observe(cardRef.current);
     return () => observer.disconnect();
@@ -264,7 +182,7 @@ function DesktopCard({
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
       onClick={() => onSelect(item)}
-      className="group relative flex-shrink-0 w-[420px] xl:w-[500px] h-[560px] xl:h-[620px] rounded-2xl overflow-hidden cursor-pointer"
+      className="group relative w-full aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer"
     >
       {/* image with clip-path reveal */}
       <div
@@ -277,19 +195,18 @@ function DesktopCard({
           src={item.image}
           alt={item.title}
           fill
-          sizes="(max-width: 1280px) 420px, 500px"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
         />
       </div>
 
-      {/* hover overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* hover overlay (always slightly dark on mobile, full dark hover on desktop) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent lg:opacity-0 lg:group-hover:opacity-100 opacity-100 transition-opacity duration-500" />
 
       {/* glass info bar at bottom */}
-      <div className="absolute bottom-0 inset-x-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]">
+      <div className="absolute bottom-0 inset-x-0 lg:translate-y-full lg:group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] translate-y-0">
         <div 
-          className="backdrop-blur-xl bg-white/10 border-t border-white/20"
-          style={{ padding: '24px' }}
+          className="lg:backdrop-blur-xl bg-transparent lg:bg-white/10 lg:border-t lg:border-white/20 p-6"
         >
           <span className="text-[var(--gold)] text-xs font-semibold tracking-[0.2em] uppercase">
             {item.category}
@@ -302,47 +219,7 @@ function DesktopCard({
       </div>
 
       {/* corner accent */}
-      <div className="absolute top-4 right-4 w-10 h-10 border-t-2 border-r-2 border-[var(--gold)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-tr-lg" />
-    </motion.div>
-  );
-}
-
-/* ═══════════════════════════ MobileCard ════════════════════════ */
-function MobileCard({
-  item,
-  onSelect,
-}) {
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.85 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.85 }}
-      transition={{ duration: 0.4 }}
-      onClick={() => onSelect(item)}
-      className="relative aspect-[3/4] rounded-xl overflow-hidden cursor-pointer group"
-    >
-      <Image
-        src={item.image}
-        alt={item.title}
-        fill
-        sizes="50vw"
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-
-      <div 
-        className="absolute bottom-0 inset-x-0"
-        style={{ padding: '16px' }}
-      >
-        <span className="text-[var(--gold)] text-[10px] font-semibold tracking-[0.15em] uppercase">
-          {item.category}
-        </span>
-        <h3 className="text-white text-sm font-[family-name:var(--font-heading)] font-bold leading-tight">
-          {item.title}
-        </h3>
-        <p className="text-white/60 text-[10px] mt-0.5">{item.location}</p>
-      </div>
+      <div className="absolute top-4 right-4 w-8 h-8 lg:w-10 lg:h-10 border-t-2 border-r-2 border-[var(--gold)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-tr-lg" />
     </motion.div>
   );
 }
@@ -350,7 +227,6 @@ function MobileCard({
 /* ═══════════════════════════ ProjectModal ═══════════════════════ */
 function ProjectModal({
   item,
-  isMobile,
   onClose,
 }) {
   return (
@@ -411,11 +287,7 @@ function ProjectModal({
 
         {/* info */}
         <div 
-          className="relative z-10"
-          style={{
-            padding: isMobile ? "24px 20px" : "48px 40px",
-            marginTop: "-64px"
-          }}
+          className="relative z-10 p-6 md:p-12 -mt-8 md:-mt-16"
         >
           <span className="text-[var(--gold)] text-xs font-semibold tracking-[0.2em] uppercase">
             {item.category}
