@@ -108,8 +108,8 @@ export default function AboutSection() {
             </div>
           </div>
           <div className="about-fade-in mt-6">
-            <a href="#portfolio" className="btn-primary">
-              Explore Our Portfolio
+            <a href="#services" className="btn-primary">
+              Explore Our Services
             </a>
           </div>
         </div>
